@@ -1,0 +1,16 @@
+{
+  "name": "chai-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "javascript",
+    "backend",
+    "chai"
+  ],
+  "author": "Rishabh Singh",
+  "license": "ISC"
+}
