@@ -1,10 +1,12 @@
 {
   "name": "chai-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "A series of backend with javascript",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon src/index.js"
   },
   "keywords": [
     "javascript",
@@ -12,5 +14,8 @@
     "chai"
   ],
   "author": "Rishabh Singh",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
 }
