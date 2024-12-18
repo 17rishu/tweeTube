@@ -160,8 +160,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined,
+      $unset: {
+        refreshToken: 1, // this removes the field from document
       },
     },
     {
@@ -215,12 +215,15 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     .json(200, { accessToken, refreshToken }, "Access token refreshed!");
 });
 
-const changeCurrentPassword = asyncHandle(async (req, res) => {
+const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
+  // console.log(oldPassword, newPassword)
 
   const user = await User.findById(req.user?._id);
+  // console.log(user);
 
-  const isPasswordCorrect = await isPasswordCorrect(oldPassword);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+  // console.log(isPasswordCorrect)
 
   if (!isPasswordCorrect) throw new apiError(400, "Invalid old password :(");
 
@@ -241,6 +244,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 const updateAccountDetail = asyncHandler(async (req, res) => {
   const { fullname, username, email } = req.body;
+  console.log(fullname, username, email);
 
   if (!fullname || !username || !email)
     throw new apiError(400, "Please fill all fields :(");
@@ -256,6 +260,8 @@ const updateAccountDetail = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).select("-password");
+
+  console.log(user);
 
   return res
     .status(200)
@@ -293,7 +299,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   if (!coverImageLocalPath)
     throw new apiError(401, "Cover image is missing :(");
 
-  const coverImage = await uploadOnCloudinary(coverImageLocal);
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
   if (!coverImage.url)
     throw new apiError(401, "Error, wile uploading cover image :(");
@@ -329,7 +335,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions",
         localField: "_id",
         foreignField: "channel",
-        as: "suscribers",
+        as: "subscribers",
       },
     },
     {
@@ -337,21 +343,23 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions",
         localField: "_id",
         foreignField: "subscriber",
-        as: "suscribedTo",
+        as: "subscribedTo",
       },
     },
     {
       $addFields: {
-        suscribersCount: {
-          $size: "$suscribers",
+        subscribersCount: {
+          $size: "$subscribers",
         },
-        channelsSuscribedToCount: {
-          $size: "$suscribedTo",
+        channelsSubscribedToCount: {
+          $size: "$subscribedTo",
         },
-        isSuscribed: {
-          if: { $in: [req.user?._id, "$suscribers.subscriber"] },
-          then: true,
-          else: false,
+        isSubscribed: {
+          $cond: {
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+            then: true,
+            else: false,
+          },
         },
       },
     },
@@ -362,16 +370,16 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         email: 1,
         avatar: 1,
         coverImage: 1,
-        suscribersCount,
-        channelsSuscribedToCount,
-        isSuscribed,
+        subscribersCount: 1,
+        channelsSubscribedToCount: 1,
+        isSubscribed: 1,
       },
     },
   ]);
 
   if (!channel?.length) throw new apiError(400, "Channel does not exist :(");
 
-  console.log(channel);
+  // console.log(channel);
 
   return res
     .status(200)
@@ -382,7 +390,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
   const user = await User.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(req.body._id),
+        _id: new mongoose.Types.ObjectId(req.user._id),
       },
     },
     {
@@ -421,6 +429,8 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       },
     },
   ]);
+
+  // console.log(user)
 
   return res
     .status(200)
