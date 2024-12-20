@@ -244,7 +244,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 const updateAccountDetail = asyncHandler(async (req, res) => {
   const { fullname, username, email } = req.body;
-  console.log(fullname, username, email);
+  // console.log(fullname, username, email);
 
   if (!fullname || !username || !email)
     throw new apiError(400, "Please fill all fields :(");
@@ -261,7 +261,7 @@ const updateAccountDetail = asyncHandler(async (req, res) => {
     { new: true }
   ).select("-password");
 
-  console.log(user);
+  // console.log(user);
 
   return res
     .status(200)
