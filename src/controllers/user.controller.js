@@ -41,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const { fullname, email, username, password } = req.body;
   // console.log(`Email: ${email}`);
-  console.log(req.body);
+  // console.log(req.body);
 
   if (
     [fullname, email, username, password].some((field) => field?.trim() === "")
@@ -58,7 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.files?.avatar[0]?.path;
   // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
-  console.log(req.files);
+  // console.log(req.files);
 
   let coverImageLocalPath;
   if (
@@ -85,13 +85,13 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
   });
 
-  console.log(user);
+  // console.log(user);
 
   const userCreated = await User.findById(user._id).select(
     "-passsword -refreshToken"
   );
 
-  console.log(userCreated);
+  // console.log(userCreated);
 
   if (!userCreated)
     throw new apiError(500, "My Bad :( , Something went wrong from our end!!");
@@ -111,7 +111,7 @@ const loginUser = asyncHandler(async (req, res) => {
   // and respond with success message also.
 
   const { username, email, password } = req.body;
-  console.log(username, email, password);
+  // console.log(username, email, password);
 
   if (!username && !email)
     throw new apiError(400, "email or username required :(");

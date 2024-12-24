@@ -28,4 +28,10 @@ router.route("/publishAVideo").post(
   publishAVideo
 );
 
-export default router
+router.route("/getAllVideos").get(getAllVideos);
+router.route("/getVideoById/:videoId").get(getVideoById);
+router.route("/updateVideo/:videoId").patch(updateVideo);
+router.route("/deleteVideo/:videoId").post(deleteVideo);
+router.route("/togglePublishStatus/:videoId").post(togglePublishStatus);
+
+export default router;
