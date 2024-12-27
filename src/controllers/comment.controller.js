@@ -9,15 +9,15 @@ const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
 
   const { videoId } = req.params;
-  // const { page = 1, limit = 10 } = req.query;
+  // const { page = 1, limit = 3 } = req.query;
 
   if (!videoId) throw new apiError(400, "Video id is missing!!");
 
   const allComments = await Video.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(videoId)
-      }
+        _id: new mongoose.Types.ObjectId(videoId),
+      },
     },
     {
       $lookup: {
@@ -34,7 +34,16 @@ const getVideoComments = asyncHandler(async (req, res) => {
       500,
       "Something went wrong, while fetching all comments for this video :("
     );
-  
+
+  // const skip = (page - 1) * limit;
+
+  // const video = await Video.findById(videoId);
+
+  // if (!video) throw new apiError(404, "Video not found :(");
+
+  // const totalComments = video.allComments.length;
+  // const comments = video.allComments.slice(skip, skip + limit);
+
   return res
     .status(200)
     .json(
