@@ -1,7 +1,8 @@
-# Chai pe uthube ke backend ki charcha
+# Chai pe tweeTube ke backend ki charcha
 
 This is a series of backend with javascript
-- [Model Link](https://app.eraser.io/workspace/GxCpylqbaed14UGyyjnS?origin=share)
+- [Model Structure](https://app.eraser.io/workspace/GxCpylqbaed14UGyyjnS?origin=share)
+- [Postman Collection](https://lunar-crescent-408384.postman.co/workspace/My-Workspace~d396f485-fdaa-4d3c-8b87-38cc85d5881b/collection/33963088-803637ad-30e2-469c-8554-a7eee89af1b6?action=share&creator=33963088&active-environment=33963088-9bd3ac65-580a-41b0-a903-86407eeeaa95)
 
 ---
 # Summary of this project
